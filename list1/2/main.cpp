@@ -17,8 +17,9 @@ public:
 class LinkedList {
 private:
     int size;
-    Node* head;
 public:
+    Node* head;
+
     LinkedList() {
         this->size = 0;
         this->head = nullptr;
@@ -64,20 +65,59 @@ public:
             }
         }
     }
+
+    void merge(LinkedList* list2) {
+        if (head == nullptr) {
+            head = list2->head;
+        }
+        else {
+            Node* tmp = head;
+            while (tmp->next != nullptr) {
+                tmp = tmp->next;
+            }
+            tmp->next = list2->head;
+        }
+    }
 };
 
-LinkedList* merge() { //?
+void timeMeasurement(LinkedList* list) {
+    cout << "Elapsed time accessing the same element: \n";
+    double tmp;
+    for (int i = 0; i < 100; i++) {
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(7);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+}
 
+void randomTimeMeasurement(LinkedList* list) {
+    cout << "Elapsed time accessing random elements: \n";
+    srand(time(nullptr));
+    double tmp;
+    int pos;
+    for (int i = 0; i < 100; i++) {
+        pos = rand() % 10000;
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(pos);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
 }
 
 int main() {
-    LinkedList l = *new LinkedList();
+    LinkedList* l = new LinkedList();
     srand(time(nullptr));
     mt19937 mt{random_device{}()};
     uniform_real_distribution<double> dist(0, 1000);
-    for (int i = 0; i < 100; i++) {
-        l.addNode(dist(mt));
+
+    for (int i = 0; i < 10000; i++) {
+        l->addNode(dist(mt));
     }
-    l.printList();
+    timeMeasurement(l);
+    cout << '\n';
+    randomTimeMeasurement(l);
     return 0;
 }
