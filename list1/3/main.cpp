@@ -2,7 +2,6 @@
 #include <chrono>
 #include <random>
 using namespace std;
-//destruktory!!
 
 class Node {
 private:
@@ -35,7 +34,7 @@ public:
         }
         else {
             Node* tmp = head;
-            while (tmp->next != head) { //?
+            while (tmp->next != head) {
                 tmp = tmp->next;
             }
             newNode->prev = tmp;
@@ -79,7 +78,63 @@ public:
             cout << tmp->data << '\n'; //" prev: " << tmp->prev->data << " next: " << tmp->next->data << '\n';
         }
     }
+
+    void merge(DoubleLinkedList* list) {
+    }
+
+    ~DoubleLinkedList() {
+        Node* tmp = head;
+        while (tmp != nullptr) {
+            Node* next = tmp->next;
+            delete tmp;
+            tmp = next;
+        }
+        delete head;
+    }
 };
+
+void timeMeasurement(DoubleLinkedList* list) {
+    cout << "Elapsed time accessing element no. 7: \n";
+    double tmp;
+    for (int i = 0; i < 100; i++) {
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(7);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+    cout << "Elapsed time accessing element no. 5000: \n";
+    for (int i = 0; i < 100; i++) {
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(5000);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+    cout << "Elapsed time accessing element no. 9000: \n";
+    for (int i = 0; i < 100; i++) {
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(9000);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+}
+
+void randomTimeMeasurement(DoubleLinkedList* list) {
+    cout << "Elapsed time accessing random elements: \n";
+    srand(time(nullptr));
+    double tmp;
+    int pos;
+    for (int i = 0; i < 100; i++) {
+        pos = rand() % 10000;
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(pos);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+}
 
 int main() {
     DoubleLinkedList* l = new DoubleLinkedList;
@@ -87,9 +142,8 @@ int main() {
     for (int i = 0; i < 10000; i++) {
         l->pushBack(rand() % 1000);
     }
-    //l->printList();
-    for (int i = 0; i < 4; i++) {
-        cout << l->getData(i) << ' ';
-    }
+    timeMeasurement(l);
+    cout << '\n';
+    randomTimeMeasurement(l);
     return 0;
 }
