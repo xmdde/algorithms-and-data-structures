@@ -78,6 +78,16 @@ public:
             tmp->next = list2->head;
         }
     }
+
+    ~LinkedList() {
+        Node* tmp = head;
+        while (tmp != nullptr) {
+            Node* next = tmp->next;
+            delete tmp;
+            tmp = next;
+        }
+        delete head;
+    }
 };
 
 void timeMeasurement(LinkedList* list) {
