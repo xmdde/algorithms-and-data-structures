@@ -1,7 +1,8 @@
 # Algorithms and Data Structures
 ## List 1 (C++)
-Implementation of:
+Implementation of some data structures:
 1. queue and stack
 2. singly linked list
-3. circular doubly linked list
+3. circular doubly linked list<br>
+
 Implemented merge functions and measuring time accessing elements on different positions in lists.
