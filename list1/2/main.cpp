@@ -40,9 +40,6 @@ public:
         size++;
     }
 
-    void deleteNode(int pos) { //
-    }
-
     double getData(int pos) {
         assert(pos < size);
         Node* node = head;
@@ -91,11 +88,27 @@ public:
 };
 
 void timeMeasurement(LinkedList* list) {
-    cout << "Elapsed time accessing the same element: \n";
+    cout << "Elapsed time accessing element no. 7: \n";
     double tmp;
     for (int i = 0; i < 100; i++) {
         auto begin = chrono::high_resolution_clock::now();
         tmp = list->getData(7);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+    cout << "Elapsed time accessing element no. 5000: \n";
+    for (int i = 0; i < 100; i++) {
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(5000);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
+        cout << i + 1 << ": " << elapsed.count() << " ns \n";
+    }
+    cout << "Elapsed time accessing element no. 9000: \n";
+    for (int i = 0; i < 100; i++) {
+        auto begin = chrono::high_resolution_clock::now();
+        tmp = list->getData(9000);
         auto end = chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
         cout << i + 1 << ": " << elapsed.count() << " ns \n";

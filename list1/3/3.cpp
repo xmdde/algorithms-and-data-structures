@@ -80,6 +80,23 @@ public:
     }
 
     void merge(DoubleLinkedList* list) {
+        if (head == nullptr) {
+            head = list->head;
+        }
+        else {
+            Node* tmp = head;
+            while (tmp->next != head) {
+                tmp = tmp->next;
+            }
+            tmp->next = list->head;
+            list->head->prev = tmp;
+            tmp = list->head;
+            while(tmp->next != list->head) {
+                tmp = tmp->next;
+            }
+            tmp->next = head;
+            head->prev = tmp;
+        }
     }
 
     ~DoubleLinkedList() {
@@ -119,6 +136,7 @@ void timeMeasurement(DoubleLinkedList* list) {
         auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
         cout << i + 1 << ": " << elapsed.count() << " ns \n";
     }
+    cout << '\n';
 }
 
 void randomTimeMeasurement(DoubleLinkedList* list) {
@@ -134,6 +152,23 @@ void randomTimeMeasurement(DoubleLinkedList* list) {
         auto elapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin);
         cout << i + 1 << ": " << elapsed.count() << " ns \n";
     }
+    cout << '\n';
+}
+
+void mergeTest() {
+    DoubleLinkedList* miniList1 = new DoubleLinkedList;
+    DoubleLinkedList* miniList2 = new DoubleLinkedList;
+    for (int i = 0; i < 5; i++) {
+        miniList1->pushBack(rand() % 100);
+        miniList2->pushBack(rand() % 100);
+    }
+    cout << "Testing merge function:\nList 1:\n";
+    miniList1->printList();
+    cout << "List 2:\n";
+    miniList2->printList();
+    miniList1->merge(miniList2);
+    cout << "List 1 after merging:\n";
+    miniList1->printList();
 }
 
 int main() {
@@ -142,8 +177,9 @@ int main() {
     for (int i = 0; i < 10000; i++) {
         l->pushBack(rand() % 1000);
     }
+    cout << "Added 10000 elements to the list.\n";
     timeMeasurement(l);
-    cout << '\n';
     randomTimeMeasurement(l);
+    mergeTest();
     return 0;
 }
