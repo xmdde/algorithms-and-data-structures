@@ -8,14 +8,16 @@ int main(int argc, char *argv[]) {
         cerr << "wrong number of arguments!\n";
         return 1;
     }
+    
+    int n = atoi(argv[1]);
+    int i = 2 * n - 1;
+    int cnt = 0;
+
     srand(time(nullptr));
     random_device rd;
     mt19937 mt(rd());
     uniform_real_distribution<double> dist(0, 1);
-
-    int n = atoi(argv[1]);
-    int i = 2 * n - 1;
-    int cnt = 0;
+    cout << n << ' ';
     
     while (i >= 0 && cnt < n) {
         double pbb = (dist(mt));

@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
     random_device rd;
     mt19937 mt(rd());
     uniform_real_distribution<double> dist(0, 1);
+    cout << n << ' ';
     while (i <= 2 * n - 1 && cnt < n) {
         double pbb = (dist(mt));
         if (pbb < 0.6) {

@@ -13,6 +13,7 @@ int main(int argc, char *argv[]) {
     random_device rd;
     mt19937 mt(rd());
     uniform_real_distribution<double> dist(0, 2*n-1);
+    cout << n << ' ';
     for (int i = 0; i < n; i++) {
         int x = floor(dist(mt));
         cout << x << ' ';
