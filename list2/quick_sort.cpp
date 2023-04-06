@@ -32,7 +32,8 @@ void quickSort(int* arr, int low, int high, int size) {
 
 int partition(int* arr, int low, int high) {
     int pivot = arr[high];
-    int i ,j;
+    int i;
+    int j;
     i = low;
     j = low;
 
@@ -42,7 +43,7 @@ int partition(int* arr, int low, int high) {
             arr[i] = arr[j];
             arr[j] = temp;
             j += 1;
-            s += 3;
+            s++;
         }
         c++;
     }
@@ -50,7 +51,7 @@ int partition(int* arr, int low, int high) {
     int temp = arr[j];
     arr[j] = arr[high];
     arr[high] = temp;
-    s+=3;
+    s++;
 
     return j;
 }
