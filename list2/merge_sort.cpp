@@ -1,26 +1,58 @@
 #include <iostream>
 #include <time.h>
+#include <random>
 using namespace std;
 void printArr(int* keys, int n);
+void experiment(int n);
 void merge(int* arr, int l, int m, int r);
-void mergeSort(int* arr, int l, int r, int size);
+void mergeSort(int* arr, int l, int r, int size, bool show);
 
 int c = 0; //number of comparisions
 int s = 0; //number of swaps
 
 int main(int argc, char *argv[]) {
-    int n;
-    cin >> n;
-    int keys[n];
-    for (int i = 0; i < n; i++) {
-        cin >> keys[i];
+    if (string(argv[1]) == "-s") { //statistic mode
+        cout << 'n' << ';' << 's' << ';' << 'c' << '\n';
+        int n = 10;
+        while (n <= 200) {
+            for (int i = 0; i < 100; i++) {
+                experiment(n);
+            }
+            n += 10;
+        }
     }
-    mergeSort(keys, 0, n - 1, n);
-    cout << "Number of comparisions: " << c << "\nNumber of keys swaps: " << s << '\n';
+    else {
+        int n;
+        cin >> n;
+        int keys[n];
+        for (int i = 0; i < n; i++) {
+            cin >> keys[i];
+        }
+        if (n < 40) {
+            mergeSort(keys, 0, n - 1, n, true);
+        } else mergeSort(keys, 0, n - 1, n, false);
+        cout << "Number of comparisions: " << c << "\nNumber of keys swaps: " << s << '\n';
+    }
+    return 0;
+}
+
+void experiment(int n) {
+    srand(time(nullptr));
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_real_distribution<double> dist(0, 2*n-1);
+    int arr[n];
+    c = 0;
+    s = 0;
+    for (int i = 0; i < n; i++) {
+        int x = floor(dist(mt));
+        arr[i] = x;
+    }
+    mergeSort(arr, 0, n-1, n, false);
+    cout << n << ';' << s << ';' << c << '\n';
 }
 
 void merge(int* arr, int l, int m, int r) {
-
     int n1 = m - l + 1;
     int n2 = r - m;
 
@@ -70,13 +102,13 @@ void merge(int* arr, int l, int m, int r) {
     }
 }
 
-void mergeSort(int* arr, int l, int r, int size) {
+void mergeSort(int* arr, int l, int r, int size, bool show) {
     if (l < r) {
         int m = l + (r - l) / 2;
-        mergeSort(arr, l, m, size);
-        mergeSort(arr, m + 1, r, size);
+        mergeSort(arr, l, m, size, show);
+        mergeSort(arr, m + 1, r, size, show);
         merge(arr, l, m, r);
-        if (size < 40)
+        if (show)
             printArr(arr, size);
     }
 }
