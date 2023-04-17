@@ -1,26 +1,17 @@
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <time.h>
 using namespace std;
 void printArr(int* keys, int n);
-void experiment(int n);
+void experiment(int n, ofstream& file);
 int partition(int* arr, int low, int high);
 void quickSort(int* arr, int low, int high, int size, bool show);
 int c = 0; //number of comparisions
 int s = 0; //number of swaps
 
 int main(int argc, char *argv[]) {
-    if (string(argv[1]) == "-s") { //statistic mode
-        cout << 'n' << ';' << 's' << ';' << 'c' << '\n';
-        int n = 10;
-        while (n <= 200) {
-            for (int i = 0; i < 100; i++) {
-                experiment(n);
-            }
-            n += 10;
-        }
-    }
-    else {
+    if (argc == 1) {
         int n;
         cin >> n;
         int keys[n];
@@ -32,10 +23,22 @@ int main(int argc, char *argv[]) {
         } else quickSort(keys, 0, n - 1, n, false);
         cout << "Number of comparisions: " << c << "\nNumber of keys swaps: " << s << '\n';
     }
+    else if (string(argv[1]) == "-s") { //statistic mode
+        ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list2/quickSortStat.txt");
+        file << 'n' << ';' << 's' << ';' << 'c' << '\n';
+        int n = 10;
+        while (n <= 200) {
+            for (int i = 0; i < 100; i++) {
+                experiment(n, file);
+            }
+            n += 10;
+        }
+        file.close();
+    }
     return 0;
 }
 
-void experiment(int n) {
+void experiment(int n, ofstream& file) {
     srand(time(nullptr));
     random_device rd;
     mt19937 mt(rd());
@@ -48,7 +51,7 @@ void experiment(int n) {
         arr[i] = x;
     }
     quickSort(arr, 0, n-1, n, false);
-    cout << n << ';' << s << ';' << c << '\n';
+    file << n << ';' << s << ';' << c << '\n';
 }
 
 void quickSort(int* arr, int low, int high, int size, bool show) {

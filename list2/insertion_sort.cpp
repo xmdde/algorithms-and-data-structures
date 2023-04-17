@@ -12,19 +12,7 @@ int c = 0; //number of comparisions
 int s = 0; //number of swaps
 
 int main(int argc, char *argv[]) {
-    if (string(argv[1]) == "-s") { //statistic mode
-        ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list2/insertionSortStat.txt");
-        file << 'n' << ';' << 's' << ';' << 'c' << '\n';
-        int n = 10;
-        while (n <= 200) {
-            for (int i = 0; i < 100; i++) {
-                experiment(n, file);
-            }
-            n += 10;
-        }
-        file.close();
-    }
-    else {
+    if (argc == 1) {
         int n;
         cin >> n;
         int keys[n];
@@ -35,6 +23,18 @@ int main(int argc, char *argv[]) {
             insertionSort(keys, n, true);
         } else insertionSort(keys, n, false);
         cout << "Number of comparisions: " << c << "\nNumber of keys swaps: " << s << '\n';
+    }
+    else if (string(argv[1]) == "-s") { //statistic mode
+        ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list2/insertionSortStat.txt");
+        file << 'n' << ';' << 's' << ';' << 'c' << '\n';
+        int n = 10;
+        while (n <= 200) {
+            for (int i = 0; i < 100; i++) {
+                experiment(n, file);
+            }
+            n += 10;
+        }
+        file.close();
     }
     return 0;
 }
