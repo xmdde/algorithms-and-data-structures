@@ -17,3 +17,11 @@ or to get statistics (total number of swaps and comparisions for different array
 ```
 ./chosen_sort -s
 ```
+## List 3 
+Implementation of selection algorithms, binary search.
+Usage (to get k-th order statistic):
+```
+./generator sizeOfArray k [flag] | ./chosen_algorithm
+```
+-a to generate data in ascending order
+-d to generate data in descending order
