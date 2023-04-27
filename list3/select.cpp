@@ -29,9 +29,6 @@ int main(int argc, char *argv[]) {
             std::cout << "found " << keys[select(keys, 0, n-1, k)] << "\n";
             printArr(keys, n);
         }
-        else {
-            //std::cout <<;
-        }
         std::cout << "number of swaps: " << s << "\nnumber of comparitions: " << c << "\n";
     }
     else if (std::string(argv[1]) == "-s") {
@@ -43,7 +40,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < n; i++) {
             std::cin >> keys[i];
         }
-        //experiment(keys, n);
+        experiment(keys, n);
     }
     return 0;
 }
@@ -113,6 +110,7 @@ int pivot(int *arr, int left, int right) {
         if (subRight > right) {
             subRight = right;
         }
+        c++;
         int median5 = partition5(arr, i, subRight);
         mySwap(arr, median5, left + (i-left)/5);
     }
