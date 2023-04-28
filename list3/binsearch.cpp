@@ -23,12 +23,15 @@ int main(int argc, char *argv[]) {
         if (n <= 50) {
             std::cout << "initial state: \n";
             printArr(keys, n);
+            auto begin = std::chrono::high_resolution_clock::now();
             std::cout << binarySearch(keys, 0, n-1, k);
-            std::cout << "number of comparisons " << c << "\time: ";
+            auto end = std::chrono::high_resolution_clock::now();
+            auto t = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+            std::cout << "number of comparisons " << c << "\ntime: " << t.count();
         }
         else {
             bool ans = binarySearch(keys, 0, n-1, k);
-            std::cout << "number of comparisons " << c << "\time: ";
+            std::cout << "number of comparisons " << c << "\ntime: ";
         }
     }
     else if (std::string(argv[1]) == "-s") {

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         cout << "Number of comparisions: " << c << "\nNumber of keys swaps: " << s << '\n';
     }
     else if (string(argv[1]) == "-s") { //statistic mode
-        ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list2/quickSortStat.txt");
+        /*ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list2/quickSortStat.txt");
         file << 'n' << ';' << 's' << ';' << 'c' << '\n';
         int n = 10;
         while (n <= 200) {
@@ -32,6 +32,16 @@ int main(int argc, char *argv[]) {
                 experiment(n, file);
             }
             n += 10;
+        }
+        file.close(); */
+        ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list2/quickSort2.txt");
+        file << 'n' << ';' << 's' << ';' << 'c' << '\n';
+        int n = 1000;
+        while (n <= 20000) {
+            for (int i = 0; i < 100; i++) {
+                experiment(n, file);
+            }
+            n += 1000;
         }
         file.close();
     }
@@ -94,6 +104,5 @@ int partition(int* arr, int low, int high) {
 void printArr(int* keys, int n) {
     for (int i = 0; i < n; i++)
         cout << keys[i] << ' ';
-
     cout << '\n';
 }
