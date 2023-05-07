@@ -9,6 +9,9 @@ int select(int *arr, int left, int right, int n);
 int pivot(int *arr, int left, int right);
 void mySwap(int *arr, const int i1, const int i2);
 void experiment(int *arr, const int n);
+void experimentK(int *arr, const int n);
+int pivotK(int *arr, int left, int right, int k);
+int selectK(int *arr, int left, int right, int n, int k);
 int s = 0;
 int c = 0;
 
@@ -41,6 +44,17 @@ int main(int argc, char *argv[]) {
             std::cin >> keys[i];
         }
         experiment(keys, n);
+    }
+    else if (std::string(argv[1]) == "-e") {
+        int n;
+        std::cin >> n;
+        int k;
+        std::cin >> k;
+        int keys[n];
+        for (int i = 0; i < n; i++) {
+            std::cin >> keys[i];
+        }
+        experimentK(keys, n);
     }
     return 0;
 }
@@ -159,4 +173,59 @@ void experiment(int *arr, const int n) {
         file3 << n << ";" << s << ";" << c << "\n";
     }
     file3.close();
+}
+
+int pivotK(int *arr, int left, int right, int k) {
+    if (right - left < k)
+        return partition5(arr, left, right);
+    for (int i = left; i < right; i += k) {
+        int subRight = i + k - 1;
+        if (subRight > right) {
+            subRight = right;
+        }
+        c++;
+        int median5 = partition5(arr, i, subRight);
+        mySwap(arr, median5, left + (i-left)/k);
+    }
+    int mid = (right - left)/(k*2) + left + 1;
+    return select(arr, left, left + (right-left)/k, mid);
+}
+
+int selectK(int *arr, int left, int right, int n, int k) { //int size??
+    while (true) {
+        if (left == right)
+            return left;
+        int pivotIndex = pivotK(arr, left, right, k);
+        pivotIndex = selectPartition(arr, left, right, pivotIndex, n);
+        if (n == pivotIndex)
+            return n;
+        if (n < pivotIndex)
+            right = pivotIndex - 1;
+        else left = pivotIndex + 1;
+    }
+}
+
+void experimentK(int *arr, const int n) {
+    std::ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list3/selectKstats.txt", std::ios::app);
+    int var = rand() % n;
+    s = 0;
+    c = 0;
+    selectK(arr, 0, n-1, var, 3);
+    file << n << ";" << s << ";" << c << ";";
+
+    s = 0;
+    c = 0;
+    selectK(arr, 0, n-1, var, 5);
+    file << s << ";" << c << ";";
+
+    s = 0;
+    c = 0;
+    selectK(arr, 0, n-1, var, 7);
+    file << s << ";" << c << ";";
+    
+    s = 0;
+    c = 0;
+    selectK(arr, 0, n-1, var, 9);
+    file << s << ";" << c << "\n";
+    file.close();
 }
