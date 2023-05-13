@@ -12,6 +12,9 @@ void experiment(int *arr, const int n);
 void experimentK(int *arr, const int n);
 int pivotK(int *arr, int left, int right, int k);
 int selectK(int *arr, int left, int right, int n, int k);
+void experimentQS(int *arr, const int n);
+void quickSortSelect(int *arr, int left, int right);
+int partition(int *arr, int left, int right);
 int s = 0;
 int c = 0;
 
@@ -56,10 +59,21 @@ int main(int argc, char *argv[]) {
         }
         experimentK(keys, n);
     }
+    else if (std::string(argv[1]) == "-qs") {
+        int n;
+        std::cin >> n;
+        int k;
+        std::cin >> k;
+        int keys[n];
+        for (int i = 0; i < n; i++) {
+            std::cin >> keys[i];
+        }
+        experimentQS(keys, n);
+    }
     return 0;
 }
 
-int select(int *arr, int left, int right, int n) { //int size??
+int select(int *arr, int left, int right, int n) {
     while (true) {
         if (left == right)
             return left;
@@ -227,5 +241,46 @@ void experimentK(int *arr, const int n) {
     c = 0;
     selectK(arr, 0, n-1, var, 9);
     file << s << ";" << c << "\n";
+    file.close();
+}
+
+void quickSortSelect(int *arr, int left, int right) {
+    if (left < right) {
+        int part = partition(arr, left, right);
+        quickSortSelect(arr, left, part);
+        quickSortSelect(arr, part + 1, right);
+    }
+}
+
+int partition(int *arr, int left, int right) {
+    int p = pivot(arr, left, right);
+    p = arr[p];
+    int leftIndex = left - 1;
+    int rightIndex = right+ 1;
+    while (true) {
+        while (true) {
+            leftIndex += 1;
+            c++;
+            if (arr[leftIndex] >= p)
+                break;
+        }
+        while (true) {
+            rightIndex -= 1;
+            c++;
+            if (arr[rightIndex] <= p)
+                break;
+        }
+        if (leftIndex >= rightIndex)
+            return rightIndex;
+        mySwap(arr, leftIndex, rightIndex);
+    }
+}
+
+void experimentQS(int *arr, const int n) {
+    std::ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list3/qsSelectStats.txt", std::ios::app);
+    s = 0;
+    c = 0;
+    quickSortSelect(arr, 0, n-1);
+    file << n << ";" << s << ";" << c << '\n';
     file.close();
 }

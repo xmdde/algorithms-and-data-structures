@@ -23,11 +23,11 @@ int main(int argc, char *argv[]) {
         if (n <= 50) {
             std::cout << "initial state: \n";
             printArr(keys, n);
-            std::cout << "found " << randomizedSelect(keys, 0, n-1, k, n) << "\n";
+            std::cout << "found " << randomizedSelect(keys, 0, n-1, k+1, n) << "\n";
             printArr(keys, n);
         }
         else {
-            std::cout << randomizedSelect(keys, 0, n-1, k, n);
+            std::cout << randomizedSelect(keys, 0, n-1, k+1, n);
         }
         std::cout << "number of swaps: " << s << "\nnumber of comparitions: " << c << "\n";
     }
