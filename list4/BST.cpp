@@ -1,7 +1,11 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 void printGap(int indent, std::vector<int> road);
 void presentation(const int n, int *toInsert, int *toDelete);
+
+int comps = 0;
+int readAndReplacements = 0;
 
 struct Node {
     int data;
@@ -36,6 +40,7 @@ BST::~BST() {
 }
 
 Node* BST::empty(Node* n) {
+    readAndReplacements++;
     if (n == nullptr)
         return nullptr;
     empty(n->left);
@@ -49,6 +54,7 @@ void BST::insert(int k) {
 }
 
 Node* BST::insert(int x, Node* n) {
+    readAndReplacements++;
     if (n == nullptr) { //
         n = new Node;
         n->data = x;
@@ -56,9 +62,11 @@ Node* BST::insert(int x, Node* n) {
         n->right = nullptr;
     }
     else if (x < n->data) {
+        comps++;
         n->left = insert(x, n->left);
     }
     else if(x > n->data) {
+        comps+=2;
         n->right = insert(x, n->right);
     }
     return n;
@@ -70,20 +78,27 @@ void BST::remove(int k) {
 
 Node* BST::remove(int x, Node* n) {
     Node* tmp;
+    readAndReplacements++;
+
     if (n == nullptr)
         return nullptr;
     else if (x < n->data) {
+        comps++;
         n->left = remove(x, n->left);
     }
     else if (x > n->data) {
+        comps += 2;
         n->right = remove(x, n->right);
     }
     else if (n->left && n->right) {
+        comps += 4;
         tmp = minNode(n->right);
         n->data = tmp->data;
         n->right = remove(n->data, n->right);
     }
     else {
+        comps += 4;
+        readAndReplacements += 2;
         tmp = n;
         if(n->left == nullptr)
             n = n->right;
@@ -96,12 +111,17 @@ Node* BST::remove(int x, Node* n) {
 
 Node* BST::minNode(Node* n) {
     if (n == nullptr) {
+        readAndReplacements++;
         return nullptr;
     }
     else if (n->left == nullptr) {
+        readAndReplacements+=2;
         return n;
     }
-    else return minNode(n->left);
+    else {
+        readAndReplacements+=2;
+        return minNode(n->left);
+    }
 }
 
 void BST::print() {
@@ -185,7 +205,46 @@ int main(int argc, char *argv[]) {
 void presentation(const int n, int *toInsert, int *toDelete) {
     BST bst;
     for (int i = 0; i < n; i++) {
+        std::cout << "insert " << toInsert[i] << '\n';
         bst.insert(toInsert[i]);
+        bst.print();
+    }
+    for (int i = 0; i < n; i++) {
+        std::cout << "delete " << toDelete[i] << '\n';
+        bst.remove(toDelete[i]);
+        bst.print();
+    }
+}
+
+void experiment(const int n, int *toInsert, int *toDelete) {
+    int maxheight = 0;
+    int maxcomps = 0;
+    int maxrr = 0;
+    int sumheight = 0;
+    int sumcomps = 0;
+    int sumrr = 0;
+    BST bst;
+    std::ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/bstStats.txt", std::ios::app);
+
+    for (int i = 0; i < n; i++) {
+        readAndReplacements = 0;
+        comps = 0;
+        bst.insert(toInsert[i]);
+        int h = bst.height();
+
+        sumheight += h;
+        sumcomps += comps;
+        sumrr += readAndReplacements;
+
+        if (comps > maxcomps) maxcomps = comps;
+        if (h > maxheight) maxheight = h;
+        if (readAndReplacements > maxrr) maxrr = readAndReplacements;
+    }
+    
+    for (int i = 0; i < n; i++) {
+        readAndReplacements = 0;
+        comps = 0;
+        bst.remove(toDelete[i]);
         bst.print();
     }
 }
