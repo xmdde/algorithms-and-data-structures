@@ -1,35 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "BST.h"
+
 void printGap(int indent, std::vector<int> road);
 void presentation(const int n, int *toInsert, int *toDelete);
-
+void experiment(const int n, int *toInsert, int *toDelete);
 int comps = 0;
 int readAndReplacements = 0;
-
-struct Node {
-    int data;
-    Node* left;
-    Node* right;
-};
-
-class BST {
-private:
-    Node* root;
-    Node* empty(Node* n);
-    Node* insert(int x, Node* n);
-    Node* minNode(Node* n);
-    Node* remove(int x, Node* n);
-    void print(Node* n, int indent, bool left_tree, std::vector<int> road);
-    int height(Node* n);
-public:
-    BST();
-    ~BST();
-    void insert(int k);
-    void remove(int k);
-    int height();
-    void print();
-};
 
 BST::BST() {
     root = nullptr;
@@ -198,6 +176,19 @@ int main(int argc, char *argv[]) {
             }
             presentation(n, keysToInsert, keysToDelete);
         }
+        if (std::string(argv[1]) == "-e") { //generate stats
+            int n;
+            std::cin >> n;
+            int keysToInsert[n];
+            int keysToDelete[n];
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToInsert[i];
+            }
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToDelete[i];
+            }
+            experiment(n, keysToInsert, keysToDelete);
+        }
     }
     return 0;
 }
@@ -240,11 +231,31 @@ void experiment(const int n, int *toInsert, int *toDelete) {
         if (h > maxheight) maxheight = h;
         if (readAndReplacements > maxrr) maxrr = readAndReplacements;
     }
-    
+    file << n << ';' << sumcomps/n << ';' << maxcomps << ';' << sumrr/n << ';' << maxrr << ';' << sumheight/n << ';' << maxheight << '\n';
+    file.close();
+
+    maxheight = 0;
+    maxcomps = 0;
+    maxrr = 0;
+    sumheight = 0;
+    sumcomps = 0;
+    sumrr = 0;
+
+    std::ofstream file2("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/bstDeleteStats.txt", std::ios::app);
     for (int i = 0; i < n; i++) {
         readAndReplacements = 0;
         comps = 0;
         bst.remove(toDelete[i]);
-        bst.print();
+        int h = bst.height();
+
+        sumheight += h;
+        sumcomps += comps;
+        sumrr += readAndReplacements;
+
+        if (comps > maxcomps) maxcomps = comps;
+        if (h > maxheight) maxheight = h;
+        if (readAndReplacements > maxrr) maxrr = readAndReplacements;
     }
+    file2 << n << ';' << sumcomps/n << ';' << maxcomps << ';' << sumrr/n << ';' << maxrr << ';' << sumheight/n << ';' << maxheight << '\n';
+    file2.close();
 }
