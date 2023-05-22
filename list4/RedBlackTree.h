@@ -3,11 +3,11 @@
 #include <vector>
 
 struct Node {
-  int key;
-  Node *parent;
-  Node *left;
-  Node *right;
-  char color;
+    int key;
+    Node *parent;
+    Node *left;
+    Node *right;
+    char color;
 };
 
 class RedBlackTree {
@@ -23,7 +23,7 @@ private:
     void insertFix(Node* k);
     void print(Node* root, int gap, bool left_tree, std::vector<int> road);
     void printGap(int gap, std::vector<int> road);
-
+    void freeTree(Node* root);
 public:
     RedBlackTree() {
         TNULL = new Node;
@@ -32,6 +32,7 @@ public:
         TNULL->right = nullptr;
         root = TNULL;
     }
+    ~RedBlackTree();
     void print();
     int height();
     Node* searchTree(int k);

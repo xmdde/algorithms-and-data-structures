@@ -4,6 +4,11 @@
 #include "RedBlackTree.h"
 using namespace std;
 
+void presentation(const int n, int *toInsert, int *toDelete);
+void experiment(const int n, int *toInsert, int *toDelete);
+int comps = 0;
+int readAndReplacements = 0;
+
 void RedBlackTree::initializeNULLNode(Node* node, Node* parent) {
     node->key = 0;
     node->parent = parent;
@@ -22,32 +27,44 @@ void RedBlackTree::insert(int key) {
 
     Node* y = nullptr;
     Node* x = this->root;
+    readAndReplacements += 2;
 
     while (x != TNULL) {
-      y = x;
-      if (node->key < x->key) {
-        x = x->left;
-      } else {
-        x = x->right;
-      }
+        readAndReplacements++;
+        comps++;
+        y = x;
+        if (node->key < x->key) {
+            readAndReplacements++;
+            x = x->left;
+        } else {
+            readAndReplacements++;
+            x = x->right;
+        }
     }
-
     node->parent = y;
+    readAndReplacements += 2;
     if (y == nullptr) {
-      root = node;
+        readAndReplacements += 1;
+        root = node;
     } else if (node->key < y->key) {
-      y->left = node;
+        readAndReplacements++;
+        y->left = node;
+        comps++;
     } else {
-      y->right = node;
+        readAndReplacements++;
+        y->right = node;
+        comps++;
     }
 
     if (node->parent == nullptr) {
-      node->color = 'B';
-      return;
+        readAndReplacements++;
+        node->color = 'B';
+        return;
     }
 
     if (node->parent->parent == nullptr) {
-      return;
+        readAndReplacements++;
+        return;
     }
     insertFix(node);
 }
@@ -55,43 +72,55 @@ void RedBlackTree::insert(int key) {
 void RedBlackTree::insertFix(Node* k) {
     Node* u;
     while (k->parent->color == 'R') {
-      if (k->parent == k->parent->parent->right) {
-        u = k->parent->parent->left;
-        if (u->color == 'R') {
-          u->color = 'B';
-          k->parent->color = 'B';
-          k->parent->parent->color = 'R';
-          k = k->parent->parent;
-        } else {
-          if (k == k->parent->left) {
-            k = k->parent;
-            rightRotate(k);
-          }
-          k->parent->color = 'B';
-          k->parent->parent->color = 'R';
-          leftRotate(k->parent->parent);
-        }
-      } else {
-        u = k->parent->parent->right;
+        readAndReplacements++;
+        comps++;
+        if (k->parent == k->parent->parent->right) {
+            u = k->parent->parent->left;
+            readAndReplacements++;
 
-        if (u->color == 'R') {
-          u->color = 'B';
-          k->parent->color = 'B';
-          k->parent->parent->color = 'R';
-          k = k->parent->parent;
-        } else {
-          if (k == k->parent->right) {
-            k = k->parent;
-            leftRotate(k);
-          }
-          k->parent->color = 'B';
-          k->parent->parent->color = 'R';
-          rightRotate(k->parent->parent);
+            if (u->color == 'R') {
+                u->color = 'B';
+                k->parent->color = 'B';
+                k->parent->parent->color = 'R';
+                k = k->parent->parent;
+                readAndReplacements++;
+            } 
+            else {
+                if (k == k->parent->left) {
+                    k = k->parent;
+                    readAndReplacements++;
+                    rightRotate(k);
+                }
+                k->parent->color = 'B';
+                k->parent->parent->color = 'R';
+                leftRotate(k->parent->parent);
+            }
+        } 
+        else {
+            readAndReplacements++;
+            u = k->parent->parent->right;
+
+            if (u->color == 'R') {
+                u->color = 'B';
+                k->parent->color = 'B';
+                k->parent->parent->color = 'R';
+                k = k->parent->parent;
+                readAndReplacements++;
+            } 
+            else {
+                if (k == k->parent->right) {
+                    k = k->parent;
+                    readAndReplacements++;
+                    leftRotate(k);
+                }
+                k->parent->color = 'B';
+                k->parent->parent->color = 'R';
+                rightRotate(k->parent->parent);
+            }
         }
-      }
-      if (k == root) {
-        break;
-      }
+        if (k == root) {
+            break;
+        }
     }
     root->color = 'B';
   }
@@ -107,59 +136,66 @@ void RedBlackTree::deleteNode(int key) {
 void RedBlackTree::deleteFix(Node* x) {
     Node* s;
     while (x != root && x->color == 'B') {
-      if (x == x->parent->left) {
-        s = x->parent->right;
-        if (s->color == 'R') {
-          s->color = 'B';
-          x->parent->color = 'R';
-          leftRotate(x->parent);
-          s = x->parent->right;
-        }
-
-        if (s->left->color == 'B' && s->right->color == 'B') {
-          s->color = 'R';
-          x = x->parent;
-        } else {
-          if (s->right->color == 'B') {
-            s->left->color = 'B';
-            s->color = 'R';
-            rightRotate(s);
+        if (x == x->parent->left) {
             s = x->parent->right;
-          }
-
-          s->color = x->parent->color;
-          x->parent->color = 'B';
-          s->right->color = 'B';
-          leftRotate(x->parent);
-          x = root;
-        }
-      } else {
-        s = x->parent->left;
-        if (s->color == 'R') {
-          s->color = 'B';
-          x->parent->color = 'R';
-          rightRotate(x->parent);
-          s = x->parent->left;
-        }
-
-        if (s->right->color == 'B' && s->right->color == 'B') {
-          s->color = 'R';
-          x = x->parent;
+            if (s->color == 'R') {
+                s->color = 'B';
+                x->parent->color = 'R';
+                leftRotate(x->parent);
+                s = x->parent->right;
+                readAndReplacements++;
+            }
+            if (s->left->color == 'B' && s->right->color == 'B') {
+                s->color = 'R';
+                x = x->parent;
+                readAndReplacements++;
+            } 
+            else {
+                if (s->right->color == 'B') {
+                    s->left->color = 'B';
+                    s->color = 'R';
+                    rightRotate(s);
+                    s = x->parent->right;
+                    readAndReplacements++;
+                }
+                s->color = x->parent->color;
+                x->parent->color = 'B';
+                s->right->color = 'B';
+                leftRotate(x->parent);
+                x = root;
+                readAndReplacements++;
+            }
         } else {
-          if (s->left->color == 'B') {
-            s->right->color = 'B';
-            s->color = 'R';
-            leftRotate(s);
             s = x->parent->left;
-          }
+            readAndReplacements++;
+            if (s->color == 'R') {
+                s->color = 'B';
+                x->parent->color = 'R';
+                rightRotate(x->parent);
+                s = x->parent->left;
+                readAndReplacements++;
+            }
 
-          s->color = x->parent->color;
-          x->parent->color = 'B';
-          s->left->color = 'B';
-          rightRotate(x->parent);
-          x = root;
+            if (s->right->color == 'B' && s->right->color == 'B') {
+                s->color = 'R';
+                x = x->parent;
+                readAndReplacements++;
+            } else {
+                if (s->left->color == 'B') {
+                    s->right->color = 'B';
+                    s->color = 'R';
+                    leftRotate(s);
+                    s = x->parent->left;
+                    readAndReplacements++;
+                }
+                s->color = x->parent->color;
+                x->parent->color = 'B';
+                s->left->color = 'B';
+                rightRotate(x->parent);
+                x = root;
+                readAndReplacements++;
+            }
         }
-      }
     }
     x->color = 'B';
 }
@@ -169,71 +205,90 @@ void RedBlackTree::deleteNodeHelper(Node* node, int key) {
     Node* x;
     Node* y;
     while (node != TNULL) {
-      if (node->key == key) {
-        z = node;
-      }
-
-      if (node->key <= key) {
-        node = node->right;
-      } else {
-        node = node->left;
-      }
+        if (node->key == key) {
+            comps++;
+            readAndReplacements++;
+            z = node;
+        }
+        if (node->key <= key) {
+            comps += 2;
+            readAndReplacements++;
+            node = node->right;
+        } 
+        else {
+            comps += 3;
+            readAndReplacements++;
+            node = node->left;
+        }
     }
     if (z == TNULL) {
-      return;
+        return;
     }
 
     y = z;
+    readAndReplacements++;
     char y_original_color = y->color;
-    if (z->left == TNULL) {
-      x = z->right;
-      rbTransplant(z, z->right);
-    } else if (z->right == TNULL) {
-      x = z->left;
-      rbTransplant(z, z->left);
-    } else {
-      y = minimum(z->right);
-      y_original_color = y->color;
-      x = y->right;
-      if (y->parent == z) {
-        x->parent = y;
-      } else {
-        rbTransplant(y, y->right);
-        y->right = z->right;
-        y->right->parent = y;
-      }
 
-      rbTransplant(z, y);
-      y->left = z->left;
-      y->left->parent = y;
-      y->color = z->color;
+    if (z->left == TNULL) {
+        x = z->right;
+        readAndReplacements += 2;
+        rbTransplant(z, z->right);
+    } else if (z->right == TNULL) {
+        x = z->left;
+        readAndReplacements += 3;
+        rbTransplant(z, z->left);
+    } else {
+        y = minimum(z->right);
+        y_original_color = y->color;
+        x = y->right;
+        readAndReplacements++;
+        if (y->parent == z) {
+            readAndReplacements++;
+            x->parent = y;
+        } else {
+            rbTransplant(y, y->right);
+            y->right = z->right;
+            y->right->parent = y;
+            readAndReplacements += 2;
+        }
+        rbTransplant(z, y);
+        readAndReplacements += 2;
+        y->left = z->left;
+        y->left->parent = y;
+        y->color = z->color;
     }
     delete z;
     if (y_original_color == 'B') {
-      deleteFix(x);
+        deleteFix(x);
     }
 }
 
 Node* RedBlackTree::successor(Node* x) {
+    readAndReplacements++;
     if (x->right != TNULL) {
-      return minimum(x->right);
+        return minimum(x->right);
     }
     Node* y = x->parent;
+    readAndReplacements++;
     while (y != TNULL && x == y->right) {
-      x = y;
-      y = y->parent;
+        x = y;
+        y = y->parent;
+        readAndReplacements += 2;
     }
     return y;
 }
 
 Node* RedBlackTree::predecessor(Node* x) {
+    readAndReplacements++;
     if (x->left != TNULL) {
       return maximum(x->left);
     }
     Node* y = x->parent;
+    readAndReplacements++;
     while (y != TNULL && x == y->left) {
       x = y;
       y = y->parent;
+      readAndReplacements += 2;
     }
     return y;
 }
@@ -241,48 +296,64 @@ Node* RedBlackTree::predecessor(Node* x) {
 void RedBlackTree::leftRotate(Node* x) {
     Node* y = x->right;
     x->right = y->left;
+    readAndReplacements += 2;
     if (y->left != TNULL) {
-      y->left->parent = x;
+        y->left->parent = x;
     }
     y->parent = x->parent;
+    readAndReplacements++;
     if (x->parent == nullptr) {
-      this->root = y;
+        this->root = y;
+        readAndReplacements++;
     } else if (x == x->parent->left) {
-      x->parent->left = y;
+        x->parent->left = y;
+        readAndReplacements += 2;
     } else {
-      x->parent->right = y;
+        x->parent->right = y;
+        readAndReplacements += 2;
     }
     y->left = x;
     x->parent = y;
+    readAndReplacements += 2;
 }
 
 void RedBlackTree::rightRotate(Node* x) {
     Node* y = x->left;
     x->left = y->right;
+    readAndReplacements += 2;
     if (y->right != TNULL) {
-      y->right->parent = x;
+        y->right->parent = x;
     }
     y->parent = x->parent;
+    readAndReplacements++;
     if (x->parent == nullptr) {
-      this->root = y;
+        this->root = y;
+        readAndReplacements++;
     } else if (x == x->parent->right) {
-      x->parent->right = y;
+        x->parent->right = y;
+        readAndReplacements += 2;
     } else {
-      x->parent->left = y;
+        x->parent->left = y;
+        readAndReplacements += 2;
     }
     y->right = x;
     x->parent = y;
+    readAndReplacements += 2;
   }
 
 void RedBlackTree::rbTransplant(Node* u, Node* v) {
     if (u->parent == nullptr) {
-      root = v;
+        root = v;
+        readAndReplacements++;
     } else if (u == u->parent->left) {
-      u->parent->left = v;
+        u->parent->left = v;
+        readAndReplacements++;
     } else {
-      u->parent->right = v;
+        u->parent->right = v;
+        readAndReplacements++;
     }
     v->parent = u->parent;
+    readAndReplacements++;
 }
 
 int RedBlackTree::height() {
@@ -303,24 +374,28 @@ Node* RedBlackTree::searchTree(int k) {
 
 Node* RedBlackTree::searchTreeHelper(Node* node, int key) {
     if (node == TNULL || key == node->key) {
-      return node;
+        comps++;
+        return node;
     }
     if (key < node->key) {
-      return searchTreeHelper(node->left, key);
+        comps++;
+        return searchTreeHelper(node->left, key);
     }
     return searchTreeHelper(node->right, key);
 }
 
 Node* RedBlackTree::minimum(Node* node) {
     while (node->left != TNULL) {
-      node = node->left;
+        node = node->left;
+        readAndReplacements++;
     }
     return node;
 }
 
 Node* RedBlackTree::maximum(Node* node) {
     while (node->right != TNULL) {
-      node = node->right;
+        node = node->right;
+        readAndReplacements++;
     }
     return node;
 }
@@ -328,6 +403,7 @@ Node* RedBlackTree::maximum(Node* node) {
 void RedBlackTree::print() {
     std::vector<int> road;
     print(root, 0, false, road);
+    std::cout << '\n';
 }
 
 void RedBlackTree::print(Node* root, int gap, bool left_tree, std::vector<int> road) {
@@ -372,16 +448,114 @@ void RedBlackTree::printGap(int gap, std::vector<int> road) {
         std::cout << output.at(i);
 }
 
-int main() {
-  RedBlackTree bst;
-  bst.insert(55);
-  bst.insert(40);
-  bst.insert(65);
-  bst.insert(60);
-  bst.insert(75);
-  bst.insert(57);
-  bst.print();
-  bst.deleteNode(40);
-  bst.deleteNode(11);
-  bst.print();
+void RedBlackTree::freeTree(Node* node) { 
+    if (node == TNULL) { 
+        return;
+    } 
+    freeTree(node->left);
+    freeTree(node->right);
+    delete node;
+}
+
+RedBlackTree::~RedBlackTree() {
+    freeTree(root);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 1) {
+        if (std::string(argv[1]) == "-p") { //presentation mode
+            int n;
+            std::cin >> n;
+            int keysToInsert[n];
+            int keysToDelete[n];
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToInsert[i];
+            }
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToDelete[i];
+            }
+            presentation(n, keysToInsert, keysToDelete);
+        }
+        if (std::string(argv[1]) == "-e") { //generate stats
+            int n;
+            std::cin >> n;
+            int keysToInsert[n];
+            int keysToDelete[n];
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToInsert[i];
+            }
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToDelete[i];
+            }
+            experiment(n, keysToInsert, keysToDelete);
+        }
+    }
+    return 0;
+}
+
+void presentation(const int n, int *toInsert, int *toDelete) {
+    RedBlackTree rbtree;
+    for (int i = 0; i < n; i++) {
+        std::cout << "insert " << toInsert[i] << '\n';
+        rbtree.insert(toInsert[i]);
+        rbtree.print();
+    }
+    for (int i = 0; i < n; i++) {
+        std::cout << "delete " << toDelete[i] << '\n';
+        rbtree.deleteNode(toDelete[i]);
+        rbtree.print();
+    }
+}
+
+void experiment(const int n, int *toInsert, int *toDelete) {
+    int maxheight = 0;
+    int maxcomps = 0;
+    int maxrr = 0;
+    long long sumheight = 0;
+    long long sumcomps = 0;
+    long long sumrr = 0;
+    RedBlackTree rbtree;
+    std::ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/rbStats.txt", std::ios::app);
+
+    for (int i = 0; i < n; i++) {
+        readAndReplacements = 0;
+        comps = 0;
+        rbtree.insert(toInsert[i]);
+        int h = rbtree.height();
+
+        sumheight += h;
+        sumcomps += comps;
+        sumrr += readAndReplacements;
+
+        if (comps > maxcomps) maxcomps = comps;
+        if (h > maxheight) maxheight = h;
+        if (readAndReplacements > maxrr) maxrr = readAndReplacements;
+    }
+    file << n << ';' << sumcomps/n << ';' << maxcomps << ';' << sumrr/n << ';' << maxrr << ';' << sumheight/n << ';' << maxheight << '\n';
+    file.close();
+
+    maxheight = 0;
+    maxcomps = 0;
+    maxrr = 0;
+    sumheight = 0;
+    sumcomps = 0;
+    sumrr = 0;
+
+    std::ofstream file2("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/rbDeleteStats.txt", std::ios::app);
+    for (int i = 0; i < n; i++) {
+        readAndReplacements = 0;
+        comps = 0;
+        rbtree.deleteNode(toDelete[i]);
+        int h = rbtree.height();
+
+        sumheight += h;
+        sumcomps += comps;
+        sumrr += readAndReplacements;
+
+        if (comps > maxcomps) maxcomps = comps;
+        if (h > maxheight) maxheight = h;
+        if (readAndReplacements > maxrr) maxrr = readAndReplacements;
+    }
+    file2 << n << ';' << sumcomps/n << ';' << maxcomps << ';' << sumrr/n << ';' << maxrr << ';' << sumheight/n << ';' << maxheight << '\n';
+    file2.close();
 }

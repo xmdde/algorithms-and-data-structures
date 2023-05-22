@@ -211,9 +211,9 @@ void experiment(const int n, int *toInsert, int *toDelete) {
     int maxheight = 0;
     int maxcomps = 0;
     int maxrr = 0;
-    int sumheight = 0;
-    int sumcomps = 0;
-    int sumrr = 0;
+    long long sumheight = 0;
+    long long sumcomps = 0;
+    long long sumrr = 0;
     BST bst;
     std::ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/bstStats.txt", std::ios::app);
 
