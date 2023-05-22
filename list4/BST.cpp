@@ -33,7 +33,7 @@ void BST::insert(int k) {
 
 Node* BST::insert(int x, Node* n) {
     readAndReplacements++;
-    if (n == nullptr) { //
+    if (n == nullptr) { 
         n = new Node;
         n->data = x;
         n->left = nullptr;
