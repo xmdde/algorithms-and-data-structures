@@ -18,7 +18,7 @@ void RedBlackTree::insert(int key) {
     node->key = key;
     node->left = TNULL;
     node->right = TNULL;
-    node->color = 1;
+    node->color = 'R';
 
     Node* y = nullptr;
     Node* x = this->root;
@@ -42,7 +42,7 @@ void RedBlackTree::insert(int key) {
     }
 
     if (node->parent == nullptr) {
-      node->color = 0;
+      node->color = 'B';
       return;
     }
 
