@@ -21,9 +21,13 @@ or to get statistics (total number of swaps and comparisions for different array
 Implementation of selection algorithms, binary search.
 Usage (to get k-th order statistic):
 ```
-./generator sizeOfArray k [flag] | ./chosen_algorithm
+./generator sizeOfArray k [-a] [-d] | ./chosen_algorithm 
 ```
 -a to generate data in ascending order
 -d to generate data in descending order
 
 ## List 4 - Tree data structures
+Usage (to display presentation of insert and delete operations on choosen tree type):
+```
+./generator k [-a] | ./chosen_tree -p  
+```
