@@ -13,15 +13,18 @@ int main(int argc, char** argv) {
         std::cerr << "wrong number of arguments";
         return 1;
     }
-    if (argv[1] == "-s")
+    if (std::string(argv[1]) == "-s") {
         stats();
+    }
     else {
         const int n = atoi(argv[1]);
         std::string a = getRandString(n);
         std::string b = getRandString(n);
-        std::cout << a << '\n' << b;
-        std::cout << "\nLCS length: " << LCSubstring(a,b);
-        std::cout << "\nc = " << comps;
+        std::string c = "abaabbaaa";
+        std::string d = "babab";
+        //std::cout << a << '\n' << b;
+        //std::cout << "\nLCS length: " << LCSubstring(a,b);
+        std::cout << "\nLCS length: " << LCSubstring(d,c);
     }
     return 0;
 }
@@ -29,22 +32,40 @@ int main(int argc, char** argv) {
 short LCSubstring(std::string& a, std::string& b) {
     const int n = a.length();
     const int m = b.length();
-    std::vector<short> dp[n];
+    std::vector<short> dp[n+1];
     for (int i = 0; i < n; i++)
-        dp[i] = std::vector<short>(m, 0);
+        dp[i] = std::vector<short>(m+1, 0);
     short mx = 0;
+    std::string ans = "";
+
     for (int i = 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
             comps++;
-            if (a[i] == b[j]) {
+            if (a[i-1] == b[j-1]) {
                 dp[i][j] = 1 + dp[i-1][j-1];
-                if (dp[i][j] > mx)
+                if (dp[i][j] > mx) {
                     mx = dp[i][j];
+                }
                 comps++;
             }
-            else dp[i][j] = 0;
+            else {
+                dp[i][j] = std::max(dp[i-1][j], dp[i][j-1]);
+            }
         }
     }
+    std::cout << "\ndp:\n    ";
+    for (auto i : b) {
+        std::cout << i << ' ';
+    }
+    std::cout << "\n";
+    for (int i = 0; i < n; i++) {
+        std::cout << a[i] << " | ";
+        for (int j = 0; j < m; j++) {
+            std::cout << dp[i][j] << ' ';
+        }
+        std::cout << std::endl;
+    }
+    std::cout << ans;
     return mx;
 }
 
