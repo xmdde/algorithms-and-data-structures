@@ -17,10 +17,10 @@ void SplayTree::insert(int key) {
     node->data = key;
     Node* y = nullptr;
     Node* x = this->root;
+    
     readAndReplacements += 5;
-
-    // Przechodzimy w dół drzewa, aż y będzie nodem w ostatnim rzędzie drzewa
     readAndReplacements++;
+
     while (x != nullptr) {
         y = x;
         readAndReplacements++;

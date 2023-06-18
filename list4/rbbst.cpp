@@ -3,9 +3,9 @@
 #include <fstream>
 #include "RedBlackTree.h"
 using namespace std;
-
 void presentation(const int n, int *toInsert, int *toDelete);
 void experiment(const int n, int *toInsert, int *toDelete);
+void experiment2(const int n, int *toInsert, int *toDelete);
 int comps = 0;
 int readAndReplacements = 0;
 
@@ -489,6 +489,19 @@ int main(int argc, char *argv[]) {
             }
             experiment(n, keysToInsert, keysToDelete);
         }
+        if (std::string(argv[1]) == "-ea") { //generate stats asc
+            int n;
+            std::cin >> n;
+            int keysToInsert[n];
+            int keysToDelete[n];
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToInsert[i];
+            }
+            for (int i = 0; i < n; i++) {
+                std::cin >> keysToDelete[i];
+            }
+            experiment2(n, keysToInsert, keysToDelete);
+        }
     }
     return 0;
 }
@@ -542,6 +555,59 @@ void experiment(const int n, int *toInsert, int *toDelete) {
     sumrr = 0;
 
     std::ofstream file2("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/rbDeleteStats.txt", std::ios::app);
+    for (int i = 0; i < n; i++) {
+        readAndReplacements = 0;
+        comps = 0;
+        rbtree.deleteNode(toDelete[i]);
+        int h = rbtree.height();
+
+        sumheight += h;
+        sumcomps += comps;
+        sumrr += readAndReplacements;
+
+        if (comps > maxcomps) maxcomps = comps;
+        if (h > maxheight) maxheight = h;
+        if (readAndReplacements > maxrr) maxrr = readAndReplacements;
+    }
+    file2 << n << ';' << sumcomps/n << ';' << maxcomps << ';' << sumrr/n << ';' << maxrr << ';' << sumheight/n << ';' << maxheight << '\n';
+    file2.close();
+}
+
+void experiment2(const int n, int *toInsert, int *toDelete) {
+    int maxheight = 0;
+    int maxcomps = 0;
+    int maxrr = 0;
+    long long sumheight = 0;
+    long long sumcomps = 0;
+    long long sumrr = 0;
+    RedBlackTree rbtree;
+    std::ofstream file("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/ASCrbStats.txt", std::ios::app);
+
+    for (int i = 0; i < n; i++) {
+        readAndReplacements = 0;
+        comps = 0;
+        rbtree.insert(toInsert[i]);
+        int h = rbtree.height();
+
+        sumheight += h;
+        sumcomps += comps;
+        sumrr += readAndReplacements;
+
+        if (comps > maxcomps) maxcomps = comps;
+        if (h > maxheight) maxheight = h;
+        if (readAndReplacements > maxrr) maxrr = readAndReplacements;
+    }
+    file << n << ';' << sumcomps/n << ';' << maxcomps << ';' << sumrr/n << ';' << maxrr << ';' << sumheight/n << ';' << maxheight << '\n';
+    file.close();
+
+    maxheight = 0;
+    maxcomps = 0;
+    maxrr = 0;
+    sumheight = 0;
+    sumcomps = 0;
+    sumrr = 0;
+
+    std::ofstream file2("/Users/justynaziemichod/Documents/SEM4/algorithms-and-data-structures/list4/ASCrbDeleteStats.txt", std::ios::app);
     for (int i = 0; i < n; i++) {
         readAndReplacements = 0;
         comps = 0;

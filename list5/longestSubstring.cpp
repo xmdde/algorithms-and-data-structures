@@ -20,11 +20,8 @@ int main(int argc, char** argv) {
         const int n = atoi(argv[1]);
         std::string a = getRandString(n);
         std::string b = getRandString(n);
-        std::string c = "abaabbaaa";
-        std::string d = "babab";
-        //std::cout << a << '\n' << b;
-        //std::cout << "\nLCS length: " << LCSubstring(a,b);
-        std::cout << "\nLCS length: " << LCSubstring(d,c);
+        std::cout << a << '\n' << b;
+        std::cout << "\nLCS: " << LCSubstring(a,b);
     }
     return 0;
 }
@@ -33,13 +30,13 @@ short LCSubstring(std::string& a, std::string& b) {
     const int n = a.length();
     const int m = b.length();
     std::vector<short> dp[n+1];
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i <= n; i++)
         dp[i] = std::vector<short>(m+1, 0);
     short mx = 0;
     std::string ans = "";
 
-    for (int i = 1; i < n; i++) {
-        for (int j = 1; j < m; j++) {
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
             comps++;
             if (a[i-1] == b[j-1]) {
                 dp[i][j] = 1 + dp[i-1][j-1];
@@ -53,19 +50,36 @@ short LCSubstring(std::string& a, std::string& b) {
             }
         }
     }
-    std::cout << "\ndp:\n    ";
-    for (auto i : b) {
-        std::cout << i << ' ';
-    }
-    std::cout << "\n";
-    for (int i = 0; i < n; i++) {
-        std::cout << a[i] << " | ";
-        for (int j = 0; j < m; j++) {
-            std::cout << dp[i][j] << ' ';
+
+    int i = n; //row
+    int j = m; //col
+    while (true) {
+        bool move = false;
+        if (j > 0) {
+            if (dp[i][j-1] == dp[i][j]) {
+                j--;
+                move = true;
+            }
         }
-        std::cout << std::endl;
+        if (i > 0) {
+            if (dp[i-1][j] == dp[i][j]) {
+                i--;
+                move = true;
+            }
+        }
+        if (i == 0 && j == 0) {
+            break;
+        }
+        if (!move) {
+            ans = a[i-1] + ans; 
+            i--;
+            j--;
+        }
+        if (i == 0 && j == 0) {
+            break;
+        }
     }
-    std::cout << ans;
+    std::cout << ans << '\n';
     return mx;
 }
 
